@@ -76,7 +76,11 @@ In this example, we will simulate an election using the D'Hondt method without a
 
 # Load the dataset
 import pandas as pd
-election_data = pd.read_csv("path_to_example_election_data.csv")
+import pkg_resources
+from dhondt import simulate_election
+
+data_path = pkg_resources.resource_filename('dhondt', 'data/example_election_data.csv') 
+election_data = pd.read_csv(data_path)
 
 # Simulate the election without an electoral threshold
 from dhondt import simulate_election
