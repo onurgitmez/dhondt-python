@@ -16,18 +16,18 @@ I will add the pip version later when it is published.
 
 First, you'll need to load your dataset. For example, using `pandas`:
 
-\```python
+```python
 import pandas as pd
 election_data = pd.read_csv("path_to_data.csv")
-\```
+```
 
 Then, use the `simulate_election` function from the `dhondt` package:
 
-\```python
+```python
 from dhondt import simulate_election
 
 results = simulate_election(election_data, "DistrictName", "NumberofSeats", ["Party1Vote", "Party2Vote"], threshold=0)
-\```
+```
 
 ## Functions
 
@@ -72,7 +72,8 @@ The example dataset, available as a CSV file, contains election data with variou
 
 In this example, we will simulate an election using the D'Hondt method without applying an electoral threshold. We will use the vote shares of AKP, MHP, CHP, IYIP, and HDP to calculate the seat distribution, and the results won't be saved to the environment.
 
-\```python
+```python
+
 # Load the dataset
 import pandas as pd
 election_data = pd.read_csv("path_to_example_election_data.csv")
@@ -80,7 +81,8 @@ election_data = pd.read_csv("path_to_example_election_data.csv")
 # Simulate the election without an electoral threshold
 from dhondt import simulate_election
 results = simulate_election(election_data, "DistrictName", "NumberofSeats", ["AkpVote", "MhpVote", "ChpVote", "IyipVote", "HdpVote"], threshold=0)
-\```
+
+```
 
 ## Features
 
