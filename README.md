@@ -99,5 +99,5 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 **Ali Onur Gitmez**
 
-- Email: alionur [at] gitmez [dot] com
+- Email: alionur@gitmez.com
 - Project link: https://github.com/onurgitmez/dhondt-python
