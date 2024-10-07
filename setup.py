@@ -7,8 +7,9 @@ setup(
     name="dhondt",
     version="0.1",
     packages=find_packages(),
+    include_package_data=True,  
     package_data={
-        'dhondt': ['data/*']
+        'dhondt': ['data/*.csv'] 
     },
     install_requires=[
         "pandas"
@@ -20,6 +21,5 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     keywords="election simulation dhondt",
-    url="https://github.com/onurgitmez/dhondt-python",
-    include_package_data=True
+    url="https://github.com/onurgitmez/dhondt-python"
 )
