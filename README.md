@@ -85,6 +85,8 @@ election_data = pd.read_csv(data_path)
 # Simulate the election without an electoral threshold
 from dhondt import simulate_election
 results = simulate_election(election_data, "DistrictName", "NumberofSeats", ["AkpVote", "MhpVote", "ChpVote", "IyipVote", "HdpVote"], threshold=0)
+for party, seats in results["totals"].items():
+    print(f"{party} seats: {seats}")
 
 ```
 
