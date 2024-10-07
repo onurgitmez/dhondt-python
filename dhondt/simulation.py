@@ -26,23 +26,21 @@ def simulate_election(df: pd.DataFrame,
     Returns:
     -------
     dict
-        A dictionary with two keys:
+        A dictionary with three keys:
         - totals: A dictionary with each party's total seats.
         - df_with_seats: A DataFrame showing seats distribution across districts.
+        - totals_df: A DataFrame showing total seats per party and vote counts.
     """
 
-    # Calculate vote shares
+    # Calculate the total votes
     total_votes = df[parties].sum()
-    vote_share = total_votes / total_votes.sum()
 
-    # Filter eligible parties based on the threshold
+    # Calculate vote share and determine eligible parties
+    vote_share = total_votes / total_votes.sum()
     eligible_parties = vote_share[vote_share >= threshold].index.tolist()
 
-    if not eligible_parties:
-        raise ValueError("No parties pass the threshold. Adjust the threshold or verify data.")
-
-    # Initialize seat columns for each party
-    for party in eligible_parties:
+    # Initialize seat columns for each eligible party
+    for party in parties:
         df[party + '_seats'] = 0
 
     # Seat allocation using D'Hondt method
@@ -67,21 +65,22 @@ def simulate_election(df: pd.DataFrame,
                     winner = party
             results[winner] += 1
 
-        # Update seat allocation for the district
         for party, seat_count in results.items():
             df.loc[df[district_col] == district, party + '_seats'] = seat_count
 
-    # Add total row
     total_row = pd.Series(index=df.columns)
-    total_row[district_col] = str("Total")
+
+    total_row['label'] = "Total"
+
+    # Sum up the total seats for each party
     total_row[seats_col] = df[seats_col].sum()
 
-    for party in eligible_parties:
+    for party in parties:
         total_row[party] = df[party].sum()
         total_row[party + '_seats'] = df[party + '_seats'].sum()
 
-    df = pd.concat([df, pd.DataFrame([total_row])], ignore_index=True)
+    totals_df = pd.DataFrame([total_row])
 
-    total_seats = {party: total_row[party + '_seats'] for party in eligible_parties}
+    total_seats = {party: total_row[party + '_seats'] for party in parties}
 
-    return {"totals": total_seats, "df_with_seats": df}
+    return {"totals": total_seats, "df_with_seats": df, "totals_df": totals_df}
