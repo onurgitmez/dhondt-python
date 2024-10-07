@@ -50,4 +50,8 @@ def simulate_election(df: pd.DataFrame,
     totals_df = pd.DataFrame([total_row])
     total_seats = {party: total_row[party + '_seats'] for party in parties}
 
+    # Print the total seats in a readable format
+    for party, seats in total_seats.items():
+        print(f"{party} seats: {seats}")
+
     return {"totals": total_seats, "df_with_seats": df, "totals_df": totals_df}
