@@ -35,14 +35,14 @@ def simulate_election(df: pd.DataFrame,
     # Fill NaN values in party columns with 0 (since no votes means no seats)
     df[parties] = df[parties].fillna(0)
 
-    # Calculate total votes
+    # Calculate total votes for all parties (ignore the threshold for vote totals)
     total_votes = df[parties].sum()
 
-    # Calculate vote share and determine eligible parties
+    # Apply the threshold only for seat allocation, not for vote counting
     vote_share = total_votes / total_votes.sum()
     eligible_parties = vote_share[vote_share >= threshold].index.tolist()
 
-    # Initialize seat columns for each eligible party
+    # Initialize seat columns for each party (including those below the threshold)
     for party in parties:
         df[party + '_seats'] = 0
 
@@ -68,7 +68,7 @@ def simulate_election(df: pd.DataFrame,
                     winner = party
             results[winner] += 1
 
-        # Update seat allocations for the district
+        # Update seat allocations for eligible parties
         for party, seat_count in results.items():
             df.loc[df[district_col] == district, party + '_seats'] = seat_count
 
@@ -78,12 +78,12 @@ def simulate_election(df: pd.DataFrame,
     # Instead of using district_col for "Total", create a new column for labels
     total_row['label'] = "Total"
 
-    # Sum up the total seats for each party
+    # Sum up the total votes and seats for each party (including those below threshold)
     total_row[seats_col] = df[seats_col].sum()
 
     for party in parties:
-        total_row[party] = df[party].sum()
-        total_row[party + '_seats'] = df[party + '_seats'].sum()
+        total_row[party] = df[party].sum()  # Include all votes
+        total_row[party + '_seats'] = df[party + '_seats'].sum()  # Include only seat allocation for eligible parties
 
     # Create a separate DataFrame for the total row
     totals_df = pd.DataFrame([total_row])
