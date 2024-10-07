@@ -73,7 +73,7 @@ def simulate_election(df: pd.DataFrame,
 
     # Add total row
     total_row = pd.Series(index=df.columns)
-    total_row[district_col] = "Total"
+    total_row[district_col] = str("Total")
     total_row[seats_col] = df[seats_col].sum()
 
     for party in eligible_parties:
