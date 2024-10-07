@@ -32,7 +32,10 @@ def simulate_election(df: pd.DataFrame,
         - totals_df: A DataFrame showing total seats per party and vote counts.
     """
 
-    # Calculate the total votes
+    # Fill NaN values in party columns with 0 (since no votes means no seats)
+    df[parties] = df[parties].fillna(0)
+
+    # Calculate total votes
     total_votes = df[parties].sum()
 
     # Calculate vote share and determine eligible parties
@@ -65,11 +68,14 @@ def simulate_election(df: pd.DataFrame,
                     winner = party
             results[winner] += 1
 
+        # Update seat allocations for the district
         for party, seat_count in results.items():
             df.loc[df[district_col] == district, party + '_seats'] = seat_count
 
+    # Create total row separately without inserting it into the main DataFrame
     total_row = pd.Series(index=df.columns)
 
+    # Instead of using district_col for "Total", create a new column for labels
     total_row['label'] = "Total"
 
     # Sum up the total seats for each party
@@ -79,8 +85,11 @@ def simulate_election(df: pd.DataFrame,
         total_row[party] = df[party].sum()
         total_row[party + '_seats'] = df[party + '_seats'].sum()
 
+    # Create a separate DataFrame for the total row
     totals_df = pd.DataFrame([total_row])
 
+    # Create a dictionary with total seats per party
     total_seats = {party: total_row[party + '_seats'] for party in parties}
 
+    # Return the original DataFrame and the totals DataFrame separately
     return {"totals": total_seats, "df_with_seats": df, "totals_df": totals_df}
